@@ -10,7 +10,10 @@ copyright:          thinker227 2022
 
 
 library
-    exposed-modules: PacketDecoder
+    exposed-modules:
+        PacketDecoder,
+        BitMagic,
+        HexMagic
 
     -- Modules included in this library but not exported.
     -- other-modules:
