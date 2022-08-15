@@ -2,7 +2,8 @@ module BitMagic (
     bitIs1,
     boolToBit,
     getNybbleBits,
-    getIntFromBits
+    getIntFromBits,
+    bitsToBinaryString
 ) where
 
 import Data.Bits
@@ -26,3 +27,6 @@ getIntFromBits' _ _ = error "No more bits"
 
 getIntFromBits :: [Bool] -> Int
 getIntFromBits bits = getIntFromBits' bits 0
+
+bitsToBinaryString :: [Bool] -> String
+bitsToBinaryString = map (\b -> if b then '1' else '0')
