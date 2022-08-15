@@ -9,9 +9,8 @@ module PacketDecoder(
     evaluatePacket
 ) where
 
-import HexMagic
-import BitMagic
-import Control.Monad.State
+import BitMagic ( boolToInteger, getIntFromBits )
+import Control.Monad.State ( State, runState, MonadState(get, state) )
 
 
 
