@@ -15,7 +15,10 @@ data Packet = Packet { version :: Int,
                        deriving (Show, Eq)
 data Payload
     = Literal { value :: Int }
-    | Operator { subpackets :: [Packet] } deriving (Show, Eq)
+    | Operator { typeLengthId :: Bool,
+                 lengthOrCount :: Int,
+                 subpackets :: [Packet] }
+                 deriving (Show, Eq)
 type PacketData = [Bool]
 
 
@@ -81,11 +84,11 @@ readOperator = do
     let bitCount = if lengthTypeId
         then 11
         else 15
-    lengthOrSubpackets <- readInt bitCount
+    lengthOrCount <- readInt bitCount
     subpackets <- if lengthTypeId
-        then readSubpacketsFromCount lengthOrSubpackets
-        else readSubpacketsFromSize lengthOrSubpackets
-    pure $ Operator subpackets
+        then readSubpacketsFromCount lengthOrCount
+        else readSubpacketsFromSize lengthOrCount
+    pure $ Operator lengthTypeId lengthOrCount subpackets
 
 readPayload :: Int -> State PacketData Payload
 readPayload typeId = do
