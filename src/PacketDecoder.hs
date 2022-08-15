@@ -20,10 +20,6 @@ type PacketData = [Bool]
 
 
 
-skipBits :: Int -> State PacketData ()
-skipBits length = state f
-    where f packet = ((), drop length packet)
-
 readBit :: State PacketData Bool
 readBit = state f
     where f packet = (head packet, tail packet)
@@ -52,11 +48,32 @@ readLiteral = do
     bits <- readLiteralBits
     pure $ Literal $ getIntFromBits bits
 
+readSubpacketsFromSize' :: Int -> State PacketData [Packet]
+readSubpacketsFromSize' targetSize = do
+    packet <- readPacket
+    
+    currentData <- get
+    let currentSize = length currentData
+    if currentSize > targetSize then do
+        next <- readSubpacketsFromSize' targetSize
+        pure $ packet : next
+    else do
+        pure [packet]
+
 readSubpacketsFromSize :: Int -> State PacketData [Packet]
-readSubpacketsFromSize = error "Not implemented"
+readSubpacketsFromSize size = do
+    currentData <- get
+    let currentSize = length currentData
+    let targetSize = currentSize - size
+    readSubpacketsFromSize' targetSize
 
 readSubpacketsFromCount :: Int -> State PacketData [Packet]
-readSubpacketsFromCount = error "Not implemented"
+readSubpacketsFromCount count = do
+    packet <- readPacket
+    if count > 1 then do
+        next <- readSubpacketsFromCount (count - 1)
+        pure $ packet : next
+    else pure [packet]
 
 readOperator :: State PacketData Payload
 readOperator = do
