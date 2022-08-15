@@ -1,6 +1,7 @@
 module HexMagic (
     hexCharToInt,
-    getHexCharBits
+    getHexCharBits,
+    getHexBits
 ) where
 
 import Data.Char ( toLower )
@@ -30,3 +31,6 @@ hexCharToInt hex =
 
 getHexCharBits :: Char -> [Bool]
 getHexCharBits = getNybbleBits . hexCharToInt
+
+getHexBits :: String -> [Bool]
+getHexBits = concatMap getHexCharBits
