@@ -1,9 +1,9 @@
 module Main where
 
-import HexMagic (getHexBits)
-import BitMagic (bitsToBinaryString)
-import PacketDecoder
-import System.Environment (getArgs)
+import System.Environment ( getArgs )
+import HexMagic ( getHexBits )
+import BitMagic ( bitsToBinaryString )
+import PacketDecoder ( createPacket, sumVersions, evaluatePacket )
 
 main :: IO ()
 main = do
