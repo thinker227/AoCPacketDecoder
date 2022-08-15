@@ -3,7 +3,9 @@ module BitMagic (
     boolToBit,
     getNybbleBits,
     getIntFromBits,
-    bitsToBinaryString
+    bitsToBinaryString,
+    boolToInt,
+    boolToInteger
 ) where
 
 import Data.Bits
@@ -30,3 +32,9 @@ getIntFromBits bits = getIntFromBits' bits 0
 
 bitsToBinaryString :: [Bool] -> String
 bitsToBinaryString = map (\b -> if b then '1' else '0')
+
+boolToInt :: Bool -> Int
+boolToInt b = if b then 1 else 0
+
+boolToInteger :: Bool -> Integer
+boolToInteger = toInteger . boolToInt

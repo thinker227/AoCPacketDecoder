@@ -1,7 +1,13 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Use <$>" #-} -- Do-notation is more explicit and readable
 
-module PacketDecoder where
+module PacketDecoder(
+    Packet,
+    Payload,
+    createPacket,
+    sumVersions,
+    evaluatePacket
+) where
 
 import HexMagic
 import BitMagic
@@ -54,7 +60,7 @@ readLiteral = do
 readSubpacketsFromSize' :: Int -> State PacketData [Packet]
 readSubpacketsFromSize' targetSize = do
     packet <- readPacket
-    
+
     currentData <- get
     let currentSize = length currentData
     if currentSize > targetSize then do
@@ -122,3 +128,23 @@ getAllSubpackets root =
 
 sumVersions :: Packet -> Int
 sumVersions root = sum $ map version $ root : getAllSubpackets root
+
+getLiteral :: Packet -> Int
+getLiteral packet = case payload packet of
+    Literal n -> n
+    _ -> 0
+
+evaluatePacket :: Packet -> Integer
+evaluatePacket packet = let
+    subs = map evaluatePacket $ subpackets $ payload packet
+    (first:second:_) = subs       
+    in case typeId packet of
+        0 -> sum subs
+        1 -> product subs
+        2 -> minimum subs
+        3 -> maximum subs
+        4 -> toInteger $ getLiteral packet
+        5 -> boolToInteger $ first > second
+        6 -> boolToInteger $ first < second
+        7 -> boolToInteger $ first == second
+        _ -> error "Invalid type ID"

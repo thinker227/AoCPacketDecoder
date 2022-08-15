@@ -18,3 +18,6 @@ main = do
 
     let versionSum = sumVersions packet
     putStrLn $ "Part 1 (version sum): " ++ show versionSum
+
+    let evalResult = evaluatePacket packet
+    putStrLn $ "Part 2 (evaluated expression): " ++ show evalResult
