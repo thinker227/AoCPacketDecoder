@@ -15,3 +15,6 @@ main = do
     putStrLn $ "Bits: " ++ bitsToBinaryString bits
     let packet = createPacket bits
     putStrLn $ "Root packet: " ++ show packet
+
+    let versionSum = sumVersions packet
+    putStrLn $ "Part 1 (version sum): " ++ show versionSum

@@ -109,5 +109,16 @@ createPacket bits = do
     let (packet, _) = runState readPacket bits
     packet
 
-foo :: IO ()
-foo = putStrLn "Many people have this power!"
+getSubpackets :: Packet -> [Packet]
+getSubpackets packet =
+    case payload packet of
+        Literal _ -> []
+        Operator _ _ subpackets -> subpackets
+
+getAllSubpackets :: Packet -> [Packet]
+getAllSubpackets root =
+    let subs = getSubpackets root in
+    subs ++ concatMap getAllSubpackets subs
+
+sumVersions :: Packet -> Int
+sumVersions root = sum $ map version $ root : getAllSubpackets root
