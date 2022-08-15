@@ -8,7 +8,7 @@ module BitMagic (
     boolToInteger
 ) where
 
-import Data.Bits
+import Data.Bits ( Bits(shiftL, shiftR, (.&.), (.|.)) )
 
 bitIs1 bit num = ((num `shiftR` bit) .&. 1) == 1
 
